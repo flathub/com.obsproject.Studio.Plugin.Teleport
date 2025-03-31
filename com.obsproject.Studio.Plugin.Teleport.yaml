@@ -25,6 +25,8 @@ modules:
       - go build -mod=vendor -ldflags "-compressdwarf=false -linkmode external -X main.version=0.7.4" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so" .
       # some dependencies have files with 444 permissions, this prevents cleanup so we're changing everything to 644
       - chmod -R u+w *
+    post-install:
+      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/metainfo ${FLATPAK_ID}.metainfo.xml
     sources:
       - type: git
         url: https://github.com/fzwoch/obs-teleport.git
