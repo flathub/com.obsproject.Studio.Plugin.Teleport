@@ -2,7 +2,7 @@ id: com.obsproject.Studio.Plugin.Teleport
 branch: stable
 runtime: com.obsproject.Studio
 runtime-version: stable
-sdk: org.kde.Sdk//6.6
+sdk: org.kde.Sdk//6.8
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.golang
 build-extension: true
@@ -24,7 +24,7 @@ modules:
           -lobs -lobs-frontend-api"
     build-commands:
       - go build -mod=vendor -ldflags "-compressdwarf=false -linkmode external -X
-        main.version=0.7.4" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so"
+        main.version=0.7.5" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so"
         .
       # some dependencies have files with 444 permissions, this prevents cleanup so we're changing everything to 644
       - chmod -R u+w *
@@ -50,12 +50,12 @@ modules:
         type: archive
         url: https://proxy.golang.org/github.com/schollz/peerdiscovery/@v/v1.7.6.zip
       - dest: vendor/golang.org/x/net
-        sha256: 5ac3c526c078cbccfb600ae49acd21705ba97e9f70e7812618cbb0616985df83
+        sha256: 24d4f49b7e781763942533d5a5acc49ebd054e05c50bf4402b264695ef8d10c5
         strip-components: 3
         type: archive
-        url: https://proxy.golang.org/golang.org/x/net/@v/v0.37.0.zip
+        url: https://proxy.golang.org/golang.org/x/net/@v/v0.43.0.zip
       - dest: vendor/golang.org/x/sys
-        sha256: 55f8255602c7a68419745943298893f0a83d6d6696199cfe6b644054669509f3
+        sha256: dc3c20611168aaa8fda0d71999be1a5222a0ba57bc767c978a590e41ff2ede35
         strip-components: 3
         type: archive
-        url: https://proxy.golang.org/golang.org/x/sys/@v/v0.31.0.zip
+        url: https://proxy.golang.org/golang.org/x/sys/@v/v0.35.0.zip
