@@ -20,9 +20,12 @@ modules:
         - GOFLAGS="-buildmode=c-shared"
         - GOPATH=/run/build/obs-teleport/go
         - CGO_CFLAGS="-I/app/include/obs"
-        - CGO_LDFLAGS="-L/app/lib -Wl,-z,relro,-z,now -Wl,--as-needed -lturbojpeg -lobs -lobs-frontend-api"
+        - CGO_LDFLAGS="-L/app/lib -Wl,-z,relro,-z,now -Wl,--as-needed -lturbojpeg
+          -lobs -lobs-frontend-api"
     build-commands:
-      - go build -mod=vendor -ldflags "-compressdwarf=false -linkmode external -X main.version=0.7.4" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so" .
+      - go build -mod=vendor -ldflags "-compressdwarf=false -linkmode external -X
+        main.version=0.7.4" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so"
+        .
       # some dependencies have files with 444 permissions, this prevents cleanup so we're changing everything to 644
       - chmod -R u+w *
     post-install:
@@ -30,8 +33,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/fzwoch/obs-teleport.git
-        tag: 0.7.4
-        commit: 3e012bdcde3c8609cc89f1ede6225e30c89451ab
+        tag: 0.7.5
+        commit: e7834e0a270928e89d24e529d775001d5729667a
         x-checker-data:
           type: git
           tag-pattern: ^([\d.]+)
