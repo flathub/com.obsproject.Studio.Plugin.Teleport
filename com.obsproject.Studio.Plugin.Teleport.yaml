@@ -33,8 +33,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/fzwoch/obs-teleport.git
-        tag: 0.7.6
-        commit: 1cad2c9c8e7e4617a40a7209f2e9148291fc9a68
+        tag: 0.7.7
+        commit: 1ffa7107709722355ac100a27b04013933757fa6
         x-checker-data:
           type: git
           tag-pattern: ^([\d.]+)
