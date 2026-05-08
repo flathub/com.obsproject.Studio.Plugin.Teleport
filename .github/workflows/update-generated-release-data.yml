@@ -1,4 +1,4 @@
-name: Update Go sources
+name: Update generated release data
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  update-go-sources:
+  update-generated-release-data:
     if: >-
       github.actor == 'flathubbot' &&
       github.event.pull_request.head.repo.full_name == github.repository
@@ -29,17 +29,17 @@ jobs:
         with:
           go-version: stable
 
-      - name: Regenerate Go sources
+      - name: Regenerate generated release data
         run: ./update-go-sources.sh
 
-      - name: Commit regenerated sources
+      - name: Commit generated release data
         run: |
-          if git diff --quiet -- com.obsproject.Studio.Plugin.Teleport.yaml modules.txt; then
+          if git diff --quiet -- com.obsproject.Studio.Plugin.Teleport.yaml com.obsproject.Studio.Plugin.Teleport.metainfo.xml modules.txt; then
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add com.obsproject.Studio.Plugin.Teleport.yaml modules.txt
-          git commit -m "Regenerate Go module sources"
+          git add com.obsproject.Studio.Plugin.Teleport.yaml com.obsproject.Studio.Plugin.Teleport.metainfo.xml modules.txt
+          git commit -m "Regenerate generated release data"
           git push origin "HEAD:${{ github.event.pull_request.head.ref }}"

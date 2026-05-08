@@ -4,6 +4,7 @@ set -euo pipefail
 manifest="${1:-com.obsproject.Studio.Plugin.Teleport.yaml}"
 app_dir="$(cd "$(dirname "$manifest")" && pwd)"
 manifest_path="${app_dir}/$(basename "$manifest")"
+metainfo_path="${app_dir}/com.obsproject.Studio.Plugin.Teleport.metainfo.xml"
 tmpdir="$(mktemp -d)"
 
 cleanup() {
@@ -43,6 +44,14 @@ version="${tag#v}"
 generator_version="${FLATPAK_GO_MOD_VERSION:-v0.1.0}"
 
 git -c advice.detachedHead=false clone --quiet --depth 1 --branch "$tag" "$repo_url" "$tmpdir/obs-teleport"
+release_date="$(
+  curl --fail --silent --show-error --location "https://api.github.com/repos/fzwoch/obs-teleport/releases/tags/${tag}" 2>/dev/null \
+    | python3 -c 'import json, sys; data = json.load(sys.stdin); print((data.get("published_at") or data.get("created_at") or "")[:10])' 2>/dev/null \
+    || true
+)"
+if [[ -z "$release_date" ]]; then
+  release_date="$(git -C "$tmpdir/obs-teleport" show -s --format=%cs HEAD)"
+fi
 
 (
   cd "$tmpdir"
@@ -75,3 +84,22 @@ awk -v block="$tmpdir/go-sources.indented.yml" '
 
 chmod --reference="$manifest_path" "$tmpdir/manifest.updated.yaml"
 mv "$tmpdir/manifest.updated.yaml" "$manifest_path"
+
+if [[ -f "$metainfo_path" ]] && ! grep -Fq "version=\"${version}\"" "$metainfo_path"; then
+  awk -v version="$version" -v date="$release_date" '
+    BEGIN {
+      release = "    <release version=\"" version "\" date=\"" date "\" />"
+    }
+    /^[[:space:]]*<releases>/ {
+      print
+      print release
+      next
+    }
+    {
+      print
+    }
+  ' "$metainfo_path" > "$tmpdir/metainfo.updated.xml"
+
+  chmod --reference="$metainfo_path" "$tmpdir/metainfo.updated.xml"
+  mv "$tmpdir/metainfo.updated.xml" "$metainfo_path"
+fi
