@@ -24,7 +24,7 @@ modules:
           -lobs -lobs-frontend-api"
     build-commands:
       - go build -mod=vendor -ldflags "-compressdwarf=false -linkmode external -X
-        main.version=0.7.5" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so"
+        main.version=0.7.6" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so"
         .
       # some dependencies have files with 444 permissions, this prevents cleanup so we're changing everything to 644
       - chmod -R u+w *
