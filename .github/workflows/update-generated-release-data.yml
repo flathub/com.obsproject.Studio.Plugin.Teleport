@@ -1,0 +1,45 @@
+name: Update generated release data
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: write
+
+jobs:
+  update-generated-release-data:
+    if: >-
+      github.actor == 'flathubbot' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout pull request branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      - name: Regenerate generated release data
+        run: ./update-go-sources.sh
+
+      - name: Commit generated release data
+        run: |
+          if git diff --quiet -- com.obsproject.Studio.Plugin.Teleport.yaml com.obsproject.Studio.Plugin.Teleport.metainfo.xml modules.txt; then
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add com.obsproject.Studio.Plugin.Teleport.yaml com.obsproject.Studio.Plugin.Teleport.metainfo.xml modules.txt
+          git commit -m "Regenerate generated release data"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
