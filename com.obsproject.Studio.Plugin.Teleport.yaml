@@ -24,7 +24,7 @@ modules:
           -lobs -lobs-frontend-api"
     build-commands:
       - go build -mod=vendor -ldflags "-compressdwarf=false -linkmode external -X
-        main.version=0.7.7" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so"
+        main.version=0.8.0" -v -o "${FLATPAK_DEST}/lib/obs-plugins/obs-teleport.so"
         .
       # some dependencies have files with 444 permissions, this prevents cleanup so we're changing everything to 644
       - chmod -R u+w *
@@ -33,8 +33,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/fzwoch/obs-teleport.git
-        tag: 0.7.7
-        commit: 1ffa7107709722355ac100a27b04013933757fa6
+        tag: 0.8.0
+        commit: b61ee3c63f629bca75e7571bb7bdd151d8ee5aa6
         x-checker-data:
           type: git
           tag-pattern: ^([\d.]+)
@@ -51,13 +51,13 @@ modules:
         type: archive
         url: https://proxy.golang.org/github.com/schollz/peerdiscovery/@v/v1.7.6.zip
       - dest: vendor/golang.org/x/net
-        sha256: 3808b07d64ba58f58ca91737f0a165439f72b03a512ea901bad2aa1e168092d5
+        sha256: 1dc3bf31fcebe80d393288ac8fe5cac7f0e82e9b3a2630021dcdf5ffbfa3f601
         strip-components: 3
         type: archive
-        url: https://proxy.golang.org/golang.org/x/net/@v/v0.53.0.zip
+        url: https://proxy.golang.org/golang.org/x/net/@v/v0.59.0.zip
       - dest: vendor/golang.org/x/sys
-        sha256: cb8b073934cf7e579c9f80c4d12619d5f96fcf97af6f07fdc649e7acec0aaddf
+        sha256: 3a47e06431ba1e24d5b2aca3a7ce31fd13faff34df3e5d8e63f105ff9d0c1786
         strip-components: 3
         type: archive
-        url: https://proxy.golang.org/golang.org/x/sys/@v/v0.43.0.zip
+        url: https://proxy.golang.org/golang.org/x/sys/@v/v0.48.0.zip
       # END generated Go modules
